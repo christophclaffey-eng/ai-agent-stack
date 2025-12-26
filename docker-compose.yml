@@ -1,0 +1,38 @@
+name: ai-agent-stack
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ollama_models:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: chroma
+    volumes:
+      - /home/chris/ai-data/chroma:/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+
+  agent-router:
+    build: ./router
+    container_name: agent-router
+    env_file:
+      - .env
+    volumes:
+      - ./workspace:/app/workspace
+    ports:
+      - "${ROUTER_PORT:-8010}:8010"
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+volumes:
+  ollama_models:

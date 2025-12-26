@@ -1,0 +1,15 @@
+# Secrets
+.env
+
+# Build / temp
+*.bak
+*.tmp
+__pycache__/
+node_modules/
+
+# Workspace / runtime
+workspace/
+
+# OS
+.DS_Store
+Thumbs.db
